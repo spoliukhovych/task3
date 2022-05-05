@@ -1,0 +1,83 @@
+#include <iostream>
+
+using namespace std;
+struct BinTree {
+    int value; 
+    BinTree* left;
+    BinTree* right;
+};
+
+void newBinTree(int val, BinTree** Tree) {
+    if ((*Tree) == NULL)
+    {
+        (*Tree) = new BinTree;
+        (*Tree)->value = val;  
+        (*Tree)->left = (*Tree)->right = NULL;
+        return;
+    }
+    if (val > (*Tree)->value) newBinTree(val, &(*Tree)->right);
+    else newBinTree(val, &(*Tree)->left);
+}
+
+void printInorder(BinTree* Root) {
+    if (Root != NULL) {
+        printInorder(Root->left);
+        cout << Root->value << endl;
+        printInorder(Root->right);
+
+    }
+}
+
+void printPreorder(BinTree* Root)
+{
+    if (Root != NULL)
+    {
+        cout << Root->value << endl;
+        printPreorder(Root->left);
+        printPreorder(Root->right);
+    }
+}
+
+
+void DestroyBTree(BinTree* Tree) {
+    if (Tree != NULL) {
+        DestroyBTree(Tree->left);
+        DestroyBTree(Tree->right);
+        delete(Tree);
+
+    }
+}
+void MenuProc() {
+    BinTree* Tree = NULL;
+    int i = 0;
+    newBinTree(96, &Tree);
+    newBinTree(4, &Tree);
+    newBinTree(45, &Tree);
+    newBinTree(6, &Tree);
+    newBinTree(12, &Tree);
+    newBinTree(150, &Tree);
+    newBinTree(250, &Tree);
+    newBinTree(175, &Tree);
+    /*int i2;
+    int val;
+    cout << "Для проверки дерева его необходимо создать, сколько вы хотите добавить чисел?" << endl;
+    cin >> i2;
+    while (i != i2) {
+        cout << "Введите" << i + 1 << "число: " << endl;
+        cin >> val;
+        newBinTree(val, &Tree);
+        i++;
+    }*/
+    cout << "Обход в прямом порядке: " << endl;
+    printPreorder(Tree);
+    cout << "Симметричный обход: " << endl;
+    printInorder(Tree);
+    cout << endl;
+    DestroyBTree(Tree);
+}
+
+int main() {
+    setlocale(LC_ALL, "ru");
+    MenuProc();
+    return 0;
+}
