@@ -164,6 +164,7 @@ void MenuProc() {
     fillarr(pre, size, summetry);
     
     BinTree2* root = constructTree(pre, size);
+    delete[] pre;
 
     cout << "Симметричный обход сбалансированого бинарного дерева: " << endl;
     printInorder2(root);
