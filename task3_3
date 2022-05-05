@@ -1,0 +1,176 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+struct BinTree {
+    int value;
+    BinTree* left;
+    BinTree* right;
+};
+
+void newBinTree(int val, BinTree** Tree) {
+    if ((*Tree) == NULL)
+    {
+        (*Tree) = new BinTree;
+        (*Tree)->value = val;
+        (*Tree)->left = (*Tree)->right = NULL;
+        return;
+    }
+    if (val > (*Tree)->value) newBinTree(val, &(*Tree)->right);
+    else newBinTree(val, &(*Tree)->left);
+}
+
+void printInorder(BinTree* Root, vector<int> &summetry) {
+    if (Root != NULL) {
+        printInorder(Root->left, summetry);
+        cout << Root->value << endl;
+        summetry.push_back(Root->value);
+        printInorder(Root->right, summetry);
+
+    }
+}
+
+void printPreorder(BinTree* Root)
+{
+    if (Root != NULL)
+    {
+        cout << Root->value << endl;
+        printPreorder(Root->left);
+        printPreorder(Root->right);
+    }
+}
+
+
+void DestroyBTree(BinTree* Tree) {
+    if (Tree != NULL) {
+        DestroyBTree(Tree->left);
+        DestroyBTree(Tree->right);
+        delete(Tree);
+
+    }
+}
+
+class BinTree2 {
+public:
+    int data;
+    BinTree2* left;
+    BinTree2* right;
+};
+
+
+
+BinTree2* newNode(int data)
+{
+    BinTree2* temp = new BinTree2();
+
+    temp->data = data;
+    temp->left = temp->right = NULL;
+
+    return temp;
+}
+
+BinTree2* constructTreeUtil(int pre[], int* preIndex, int low,
+    int high, int size)
+{
+
+    if (*preIndex >= size || low > high)
+    {
+        return NULL;
+    }
+
+    BinTree2* root = newNode(pre[*preIndex]);
+    *preIndex = *preIndex + 1;
+
+    if (low == high)
+    {
+        return root;
+    }
+
+    int i;
+    for (i = low; i <= high; ++i)
+    {
+        if (pre[i] > root->data)
+            break;
+    }
+
+    root->left = constructTreeUtil(pre, preIndex, *preIndex,
+        i - 1, size);
+    root->right
+        = constructTreeUtil(pre, preIndex, i, high, size);
+
+    return root;
+}
+
+BinTree2* constructTree(int pre[], int size)
+{
+    int preIndex = 0;
+    return constructTreeUtil(pre, &preIndex, 0, size - 1,
+        size);
+}
+
+void printInorder2(BinTree2* node)
+{
+    if (node == NULL)
+        return;
+    printInorder2(node->left);
+    cout << node->data << " ";
+    printInorder2(node->right);
+}
+
+int* fillarr(int arr[], int size, vector<int>& summetry)
+{
+    for (int i = 0; i < size; i++)
+    {
+        arr[i] = summetry.at(i);
+    }
+    return arr;
+}
+
+
+void MenuProc() {
+    BinTree* Tree = NULL;
+    vector<int> summetry;
+    int i = 0;
+    newBinTree(96, &Tree);
+    newBinTree(4, &Tree);
+    newBinTree(45, &Tree);
+    newBinTree(6, &Tree);
+    newBinTree(12, &Tree);
+    newBinTree(150, &Tree);
+    newBinTree(250, &Tree);
+    newBinTree(175, &Tree);
+    /*int i2;
+    int val;
+    cout << "Для проверки дерева его необходимо создать, сколько вы хотите добавить чисел?" << endl;
+    cin >> i2;
+    while (i != i2) {
+        cout << "Введите" << i + 1 << "число: " << endl;
+        cin >> val;
+        newBinTree(val, &Tree);
+        i++;
+    }*/
+    cout << "Обход в прямом порядке: " << endl;
+    printPreorder(Tree);
+    cout << "Симметричный обход: " << endl;
+    printInorder(Tree, summetry);
+    cout << endl;
+    DestroyBTree(Tree);
+
+    int size = summetry.size();
+    int* pre = new int[size];
+
+    fillarr(pre, size, summetry);
+    
+    BinTree2* root = constructTree(pre, size);
+
+    cout << "Симметричный обход сбалансированого бинарного дерева: " << endl;
+    printInorder2(root);
+}
+
+int main() {
+    setlocale(LC_ALL, "ru");
+    MenuProc();
+    return 0;
+}
